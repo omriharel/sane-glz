@@ -52,7 +52,7 @@ export default function ShowPreferences(props) {
     return loading ? <Loader centered /> : (
         <>
             <Form.Row className="mb-2">
-                <Col xs={2} md={1}>
+                <Col sm={2} xs={2} md={1}>
                     <Button
                         href="/"
                         className="p-0"

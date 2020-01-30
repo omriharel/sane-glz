@@ -19,6 +19,7 @@ export default function ShowList(props) {
     const [initiallyLoading, setInitiallyLoading] = useState(true);
     const [numOfShows, setNumOfShows] = useState(shows.length);
     const [fetchedShowsCounter, setFetchedShowsCounter] = useState(0);
+    const [currentlyPlayingShow, setCurrentlyPlayingShow] = useState(null);
 
     // map of showKey -> showObject
     const [fetchedShows, setFetchedShows] = useState({});
@@ -117,23 +118,32 @@ export default function ShowList(props) {
 
     showInstances.sort((a, b) => a.id < b.id ? 1 : -1);
 
+    const showPlayClickedCallback = (showUrl, callbacks) => {
+        props.playerCallback(showUrl, callbacks);
+        setCurrentlyPlayingShow(showUrl);
+    }
+
     return initiallyLoading ? <Loader centered /> : (
         <>
             <ButtonGroup className="mb-2">
                 <Button variant="success" href="/settings">
                     <i className="material-icons mt-30">settings</i>
                 </Button>
-                <Button className="mr-1">
+                {/* <Button className="mr-1">
                     <i className="material-icons mt-30">sort</i>
-                </Button>
+                </Button> */}
             </ButtonGroup>
-            <ListGroup className="scrollable">
+            <ListGroup className="mb-3">
                 {showInstances.map(instance => {
                     return (
                         <ListGroup.Item
                             key={instance.key}
                         >
-                            <Show show={instance} playCallback={props.playCallback} />
+                            <Show
+                                show={instance}
+                                playerCallback={showPlayClickedCallback}
+                                active={instance.url === currentlyPlayingShow}
+                            />
                         </ListGroup.Item>
                     );
                 })}
