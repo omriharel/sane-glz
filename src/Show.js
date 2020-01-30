@@ -60,6 +60,38 @@ export default function Show(props) {
         font-style: italic;
     `;
 
+    const showAirTimeStyle = css`
+        font-style: italic;
+        font-size: 15px;
+        line-height: 0;
+    `;
+
+    const showDurationStyle = css`
+        font-size: 18px;
+        font-weight: bold;
+        line-height: 0;
+    `;
+
+    const subtitleToShow = (showName, instanceName, quote) => {
+        if (showName === instanceName && quote === instanceName) {
+            return '';
+        }
+
+        if (showName !== instanceName && quote === instanceName) {
+            return quote;
+        }
+
+        if (instanceName.endsWith(quote)) {
+            return instanceName;
+        }
+
+        if (quote.endsWith(instanceName)) {
+            return quote;
+        }
+
+        return instanceName + ' - ' + quote;
+    };
+
     const doneWithThis = progressData > 0.95;
     const elementVariant = props.active ? 'warning' : (doneWithThis ? 'success' : 'primary');
 
@@ -99,27 +131,26 @@ export default function Show(props) {
             <Col>
                 <Container>
                     <Row>
-                        <Col>
+                        <Col md={12}>
+                            <span css={showAirTimeStyle}>
+                                <small>
+                                    {props.show.airTime}
+                                </small>
+                            </span>
+                        </Col>
+                        <Col md={10}>
                             <span css={showTitleStyle}>
                                 {props.show.showName}
                             </span>
                         </Col>
-                        <Col></Col>
-                        <Col>
-                            <span css={showTitleStyle}>
+                        <Col md={2}>
+                            <span css={showDurationStyle}>
                                 {_.split(durationData || props.show.duration, ':')[0] + ' ד\''}
                             </span>
                         </Col>
-                        <Col>
+                        <Col md={12}>
                             <span css={showSubTitleStyle}>
-                                {props.show.showName === props.show.name ? (
-                                    props.show.name === props.show.quote ? '' : props.show.quote
-                                ) : props.show.name + (props.show.quote === props.show.name ? '' : ' - ' + props.show.quote)}
-                            </span>
-                        </Col>
-                        <Col>
-                            <span css={showSubTitleStyle}>
-                                {props.show.airTime}
+                                {subtitleToShow(props.show.showName, props.show.name, props.show.quote)}
                             </span>
                         </Col>
                     </Row>
@@ -145,7 +176,7 @@ export default function Show(props) {
             <Col sm={2} xs={2} md={1}>
                 <Button
                     variant={elementVariant}
-                    className="mr-n2"
+                    className="mr-n2 mt-3 mb-3"
                     onClick={togglePlay}
                 >
                     <i className="material-icons md-30">
