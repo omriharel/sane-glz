@@ -1,26 +1,48 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
 
-function App() {
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from 'react-router-dom';
+
+import './App.css';
+import 'bootstrap/dist/css/bootstrap.css';
+
+import Container from 'react-bootstrap/Container';
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
+
+import MediaPlayer from './MediaPlayer';
+import ShowList from './ShowList';
+import ShowPreferences from './ShowPreferences';
+
+export default function App() {
+  const [url, setUrl] = useState(null);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Router>
+        <Container>
+          <Row>
+            <Col>
+              <MediaPlayer url={url} />
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Switch>
+                <Route path="/settings">
+                  <ShowPreferences/>
+                </Route>
+                <Route path="/">
+                  <ShowList playCallback={setUrl} />
+                </Route>
+              </Switch>
+            </Col>
+          </Row>
+        </Container>
+      </Router>
     </div>
   );
 }
-
-export default App;
