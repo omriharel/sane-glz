@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 
 import ListGroup from 'react-bootstrap/ListGroup';
 import Button from 'react-bootstrap/Button';
+import Alert from 'react-bootstrap/Alert';
+import { Link } from 'react-router-dom';
 
 import _ from 'lodash';
 
@@ -29,7 +31,7 @@ export default function ShowList(props) {
     }, [fetchedShows]);
 
     useEffect(() => {
-        if (fetchedShowsCounter + 1 === numOfShows && initiallyLoading) {
+        if (fetchedShowsCounter === numOfShows && initiallyLoading) {
             setInitiallyLoading(false);
         }
     }, [fetchedShowsCounter, numOfShows, initiallyLoading]);
@@ -123,31 +125,51 @@ export default function ShowList(props) {
         setCurrentlyPlayingShow(showUrl);
     }
 
-    return initiallyLoading ? <Loader centered /> : (
+    return (
         <>
             <ButtonGroup className="mb-2">
-                <Button variant="success" href="/settings">
+                <Button as={Link} to="/settings" variant="success">
                     <i className="material-icons mt-30">settings</i>
                 </Button>
                 {/* <Button className="mr-1">
                     <i className="material-icons mt-30">sort</i>
                 </Button> */}
             </ButtonGroup>
-            <ListGroup className="mb-3">
-                {showInstances.map(instance => {
-                    return (
-                        <ListGroup.Item
-                            key={instance.key}
-                        >
-                            <Show
-                                show={instance}
-                                playerCallback={showPlayClickedCallback}
-                                active={instance.url === currentlyPlayingShow}
-                            />
-                        </ListGroup.Item>
-                    );
-                })}
-            </ListGroup>
+            {shows.length === 0 &&
+            <Alert variant="primary">
+                <Alert.Heading>
+                    היי!
+                </Alert.Heading>
+                <p>
+                    די ריק פה...
+                    למה שלא <Alert.Link as={Link} to="/settings">תבחרו דברים לשמוע?</Alert.Link>
+                </p>
+                <hr />
+                <div className="d-flex justify-content-end">
+                    <Button as={Link} to="/settings" variant="outline-primary">
+                        קח אותי כמו שמעולם שלא לקחת אף אחד
+                    </Button>
+                </div>
+            </Alert>}
+            {shows.length > 0 && initiallyLoading ? <Loader centered /> : (
+                <>
+                    <ListGroup className="mb-3">
+                        {showInstances.map(instance => {
+                            return (
+                                <ListGroup.Item
+                                    key={instance.key}
+                                >
+                                    <Show
+                                        show={instance}
+                                        playerCallback={showPlayClickedCallback}
+                                        active={instance.url === currentlyPlayingShow}
+                                    />
+                                </ListGroup.Item>
+                            );
+                        })}
+                    </ListGroup>
+                </>
+            )}
         </>
     );
 }

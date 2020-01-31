@@ -64,10 +64,11 @@ export default function Show(props) {
         font-style: italic;
         font-size: 15px;
         line-height: 0;
+        color: #3e3e3e;
     `;
 
     const showDurationStyle = css`
-        font-size: 18px;
+        font-size: 16px;
         font-weight: bold;
         line-height: 0;
     `;
@@ -95,22 +96,44 @@ export default function Show(props) {
     const doneWithThis = progressData > 0.95;
     const elementVariant = props.active ? 'warning' : (doneWithThis ? 'success' : 'primary');
 
+    const getDetailSpan = (span, order) => {
+        return {
+            span: span,
+            order: order,
+        };
+    };
+
     return props.loading ? <Loader size={10} dark /> : (
     <Container>
         <Row>
             <Col sm="auto" xs="auto" md="auto">
                 <div
-                    className="ml-n5 mr-n5 mt-n2 mb-n2"
+                    className="mt-1 ml-n3 mr-n3 p-1"
                     css={css`
-                        font-size: 30px;
+                        font-size: 28px;
                         font-weight: bold;
                         text-align: center;
+                        border: 1px solid;
+                        border-color: rgba(0, 0, 0, 0.45);
+                        border-radius: 10px;
+                        vertical-align: middle;
                     `}
                 >
+                    <div className="mb-n2 mt-1" css={css`font-size: 14px`}>
+                        {{
+                            1: 'ראשון',
+                            2: 'שני',
+                            3: 'שלישי',
+                            4: 'רביעי',
+                            5: 'חמישי',
+                            6: 'שישי',
+                            7: 'שבת',
+                        }[props.show.date.getDay() + 1]}
+                    </div>
                     <div>
                         {('00' + props.show.date.getDate().toString()).slice(-2)}
                     </div>
-                    <div className="mt-n3" css={css`font-size: 22px`}>
+                    <div className="mt-n3" css={css`font-size: 22px; font-weight: normal;`}>
                         {{
                             1: 'ינו',
                             2: 'פבר',
@@ -128,40 +151,36 @@ export default function Show(props) {
                     </div>
                 </div>
             </Col>
-            <Col>
+            <Col className="ml-n2 mr-n2">
                 <Container>
                     <Row>
-                        <Col md={12}>
+                        <Col xs={getDetailSpan(8, 1)} sm={getDetailSpan(8, 1)} md={getDetailSpan(12, 1)}>
                             <span css={showAirTimeStyle}>
                                 <small>
                                     {props.show.airTime}
                                 </small>
                             </span>
                         </Col>
-                        <Col md={10}>
+                        <Col xs={getDetailSpan(12, 3)} sm={getDetailSpan(12, 3)} md={getDetailSpan(10, 2)}>
                             <span css={showTitleStyle}>
                                 {props.show.showName}
                             </span>
                         </Col>
-                        <Col md={2}>
+                        <Col xs={getDetailSpan(4, 2)} sm={getDetailSpan(4, 2)} md={getDetailSpan(2, 3)}>
                             <span css={showDurationStyle}>
                                 {_.split(durationData || props.show.duration, ':')[0] + ' ד\''}
                             </span>
                         </Col>
-                        <Col md={12}>
+                        <Col xs={getDetailSpan(12, 4)} sm={getDetailSpan(12, 4)} md={getDetailSpan(12, 4)}>
                             <span css={showSubTitleStyle}>
                                 {subtitleToShow(props.show.showName, props.show.name, props.show.quote)}
                             </span>
                         </Col>
                     </Row>
-                    {/* <Row>
-                        <Col>
-                            {props.show.name + ' | ' + props.show.quote + ' | ' + props.show.showName + ' | ' + (durationData || props.show.duration)}
-                        </Col>
-                    </Row> */}
                     <Row>
                         <Col>
                             <ProgressBar
+                                className="mt-3"
                                 animated={props.active}
                                 variant={elementVariant}
                                 min={0}

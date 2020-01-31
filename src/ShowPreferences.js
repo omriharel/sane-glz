@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
+import { Link } from 'react-router-dom';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -54,7 +55,8 @@ export default function ShowPreferences(props) {
             <Form.Row className="mb-2">
                 <Col sm={2} xs={2} md={1}>
                     <Button
-                        href="/"
+                        as={Link}
+                        to="/"
                         className="p-0"
                         style={{width: "100%"}}
                         variant="success"
