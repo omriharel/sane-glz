@@ -21,7 +21,7 @@ export default function ShowPreferences(props) {
     const [chosenShows, setChosenShows] = useState(getStored('chosenShows') || []);
     const [showFilter, setShowFilter] = useState('');
 
-    const pollShowList = () => {
+    useEffect(() => {
         fetch(showsUrl)
         .then(response => response.json())
         .then(data => {
@@ -29,10 +29,6 @@ export default function ShowPreferences(props) {
             setLoading(false);
         })
         .catch(error => console.error(error));
-    };
-
-    useEffect(() => {
-        pollShowList();
     }, []);
 
     const applyShowFilter = show => showFilter !== "" ? _.includes(show.name, showFilter) : true;
