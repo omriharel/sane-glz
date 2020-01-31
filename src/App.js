@@ -30,52 +30,52 @@ export default function App() {
 
   return (
     <div className="App">
-      <Router>
-        <Container>
-          <Row>
-            <Col>
-              <MediaPlayer
-                url={url}
-                onDuration={onDurationCallback}
-                onProgress={onProgressCallback}
-                onPlay={onPlayCallback}
-                onPause={onPauseCallback}
-                onStop={onStopCallback}
-                progressCallback={progressCallback}
-                toggle={pauseToggle}
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Switch>
-                <Route path="/settings">
-                  <ShowPreferences/>
-                </Route>
-                <Route path="/">
-                  <ShowList playerCallback={(targetUrl, callbacks) => {
-                    setUrl(currentUrl => {
-                      if (targetUrl !== currentUrl) {
-                        return targetUrl;
-                      }
+      <div className="sane-glz-header">
+        <MediaPlayer
+          url={url}
+          onDuration={onDurationCallback}
+          onProgress={onProgressCallback}
+          onPlay={onPlayCallback}
+          onPause={onPauseCallback}
+          onStop={onStopCallback}
+          progressCallback={progressCallback}
+          toggle={pauseToggle}
+        />
+      </div>
+      <div className="sane-glz-content">
+        <Router>
+          <Container>
+            <Row>
+              <Col>
+                <Switch>
+                  <Route path="/settings">
+                    <ShowPreferences/>
+                  </Route>
+                  <Route path="/">
+                    <ShowList playerCallback={(targetUrl, callbacks) => {
+                      setUrl(currentUrl => {
+                        if (targetUrl !== currentUrl) {
+                          return targetUrl;
+                        }
 
-                      setPauseToggle(currentState => !currentState);
-                      return currentUrl;
-                    });
+                        setPauseToggle(currentState => !currentState);
+                        return currentUrl;
+                      });
 
-                    setOnProgressCallback(() => callbacks.onProgress);
-                    setOnDurationCallback(() => callbacks.onDuration);
-                    setOnPlayCallback(() => callbacks.onPlay);
-                    setOnPauseCallback(() => callbacks.onPause);
-                    setOnStopCallback(() => callbacks.onStop);
-                    setProgressCallback(() => callbacks.showProgess);
-                  }} />
-                </Route>
-              </Switch>
-            </Col>
-          </Row>
-        </Container>
-      </Router>
+                      setOnProgressCallback(() => callbacks.onProgress);
+                      setOnDurationCallback(() => callbacks.onDuration);
+                      setOnPlayCallback(() => callbacks.onPlay);
+                      setOnPauseCallback(() => callbacks.onPause);
+                      setOnStopCallback(() => callbacks.onStop);
+                      setProgressCallback(() => callbacks.showProgess);
+                    }} />
+                  </Route>
+                </Switch>
+              </Col>
+            </Row>
+          </Container>
+        </Router>
+      </div>
     </div>
   );
 }

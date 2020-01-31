@@ -17,6 +17,7 @@ const baseShowUrl = baseApiUrl + '/program';
 const strippedUrlPrefix = '/גלצ/תוכניות/';
 
 export default function ShowList(props) {
+    const [daysToSee,] = useState(getStored('daysToSee') || 15);
     const [shows,] = useState(getStored('chosenShows') || []);
     const [initiallyLoading, setInitiallyLoading] = useState(true);
     const [numOfShows, setNumOfShows] = useState(shows.length);
@@ -83,7 +84,6 @@ export default function ShowList(props) {
     }, [shows]);
 
     const showInstances = [];
-    const daysToSee = 20;
 
     const cutoffDate = new Date();
     cutoffDate.setDate(cutoffDate.getDate() - daysToSee);

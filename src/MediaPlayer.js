@@ -167,7 +167,11 @@ export default function MediaPlayer(props) {
                         </Row>
                     </Container>
                 </>
-             ) : <h1>Sane GLZ</h1>}
+             ) : (
+                 <h1 css={css`padding-top: 35px;`}>
+                     Sane GLZ
+                 </h1>
+             )}
         </div>
     );
 }
