@@ -28,10 +28,6 @@ export default function ShowList(props) {
     const [fetchedShows, setFetchedShows] = useState({});
 
     useEffect(() => {
-        console.log('hi', fetchedShows);
-    }, [fetchedShows]);
-
-    useEffect(() => {
         if (fetchedShowsCounter === numOfShows && initiallyLoading) {
             setInitiallyLoading(false);
         }
@@ -58,7 +54,7 @@ export default function ShowList(props) {
                     .then(response => response.json())
                     .then(data => processNewShowData(showKey, showUrl, data))
                     .catch(error => console.log(`Failed to retry show fetch at ${showUrl}`, error));
-                }, 1000);
+                }, 1000 * 10); // retry 10 seconds later
             }
         }
 
@@ -78,7 +74,7 @@ export default function ShowList(props) {
         };
 
         pollShowList();
-        let timerId = setInterval(pollShowList, 1000 * 600)
+        let timerId = setInterval(pollShowList, 1000 * 600 * 3) // every 30 mins
 
         return () => clearInterval(timerId);
     }, [shows]);
