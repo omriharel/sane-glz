@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react'; // eslint-disable-line no-unused-vars
 
 /** @jsx jsx */
 import { jsx, css } from "@emotion/core";

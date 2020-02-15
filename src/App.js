@@ -16,6 +16,7 @@ import Row from 'react-bootstrap/Row';
 import MediaPlayer from './MediaPlayer';
 import ShowList from './ShowList';
 import ShowPreferences from './ShowPreferences';
+import PrivacyPolicy from './PrivacyPolicy';
 
 export default function App() {
   const [url, setUrl] = useState(null);
@@ -50,6 +51,9 @@ export default function App() {
                 <Switch>
                   <Route path="/settings">
                     <ShowPreferences/>
+                  </Route>
+                  <Route path="/privacy">
+                    <PrivacyPolicy/>
                   </Route>
                   <Route path="/">
                     <ShowList playerCallback={(targetUrl, callbacks) => {
