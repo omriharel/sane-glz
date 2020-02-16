@@ -22,10 +22,23 @@ export default function Show(props) {
     const [durationData, setDurationData] = useState(getStored(durationKey) || null);
     const [playing, setPlaying] = useState(false);
 
-    const onProgress = (progress) => {
-        store(progressKey, progress.played);
-        setProgressData(progress.played);
+    let lastOnlineProgress = null;
 
+    const onProgress = (progress) => {
+        const now = Date.now();
+        let dontStoreOnline = false;
+
+        // only save once in 20 seconds i think
+        if (lastOnlineProgress && (now - lastOnlineProgress < 20 * 1000)) {
+            dontStoreOnline = true;
+        }
+
+        if (!dontStoreOnline) {
+            lastOnlineProgress = now;
+        }
+
+        store(progressKey, progress.played, dontStoreOnline);
+        setProgressData(progress.played);
     };
 
     const onKnownDuration = (duration) => {

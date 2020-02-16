@@ -8,24 +8,33 @@ import { Link } from 'react-router-dom';
 import _ from 'lodash';
 
 import Show from './Show';
-import { baseApiUrl } from './constants';
-import { getStored } from './helpers';
+import { baseApiUrl, authLoginPageUrl, authLogoutPageUrl } from './constants';
+import { getStored, fetchOnlineData } from './helpers';
 import Loader from './Loader';
-import { ButtonGroup } from 'react-bootstrap';
 
 const baseShowUrl = baseApiUrl + '/program';
 const strippedUrlPrefix = '/גלצ/תוכניות/';
 
 export default function ShowList(props) {
-    const [daysToSee,] = useState(getStored('daysToSee') || 15);
-    const [shows,] = useState(getStored('chosenShows') || []);
+    const [loggedIn,] = useState(getStored('loggedIn') || false);
+    const [username,] = useState(getStored('username') || null);
+    const [daysToSee, setDaysToSee] = useState(getStored('daysToSee') || 15);
+    const [shows, setShows] = useState(getStored('chosenShows') || []);
     const [initiallyLoading, setInitiallyLoading] = useState(true);
     const [numOfShows, setNumOfShows] = useState(shows.length);
     const [fetchedShowsCounter, setFetchedShowsCounter] = useState(0);
     const [currentlyPlayingShow, setCurrentlyPlayingShow] = useState(null);
+    const [fetchedOnlineData, setFetchedOnlineData] = useState(false);
 
     // map of showKey -> showObject
     const [fetchedShows, setFetchedShows] = useState({});
+
+    useEffect(() => {
+        fetchOnlineData(() => {
+            setDaysToSee(getStored('daysToSee') || 15);
+            setShows(getStored('chosenShows') || []);
+        });
+    }, []);
 
     useEffect(() => {
         if (fetchedShowsCounter === numOfShows && initiallyLoading) {
@@ -53,7 +62,7 @@ export default function ShowList(props) {
                     fetch(showUrl)
                     .then(response => response.json())
                     .then(data => processNewShowData(showKey, showUrl, data))
-                    .catch(error => console.log(`Failed to retry show fetch at ${showUrl}`, error));
+                    .catch(error => console.error(`Failed to retry show fetch at ${showUrl}`, error));
                 }, 1000 * 10); // retry 10 seconds later
             }
         }
@@ -121,16 +130,38 @@ export default function ShowList(props) {
         setCurrentlyPlayingShow(showUrl);
     }
 
+    const authControls = (
+        <div className="flex-shrink">
+            {loggedIn ? <>
+                {_.startsWith(username, 'google_') ? <>
+                    <span className="text-light">מחובר/ת עם Google</span>
+                </> : <>
+                    <span className="text-light">מחובר/ת בתור <b>{username}</b></span>
+                </>}
+                <span className="text-light">&nbsp;&nbsp;(<a className="text-warning" href={authLogoutPageUrl}>
+                    יציאה
+                </a>)</span>
+            </> : <>
+                <Button href={authLoginPageUrl} variant="outline-light">
+                    התחברו לסנכרון בין מכשירים
+                </Button>
+            </>
+            }
+        </div>
+    );
+
+
     return (
         <>
-            <ButtonGroup className="mb-2">
-                <Button as={Link} to="/settings" variant="success">
+            <div className="d-flex align-items-baseline justify-content-between mb-2">
+                <Button className="flex-shrink" as={Link} to="/settings" variant="success">
                     <i className="material-icons mt-30">settings</i>
                 </Button>
                 {/* <Button className="mr-1">
                     <i className="material-icons mt-30">sort</i>
                 </Button> */}
-            </ButtonGroup>
+                {authControls}
+            </div>
             {shows.length === 0 &&
             <Alert variant="primary">
                 <Alert.Heading>

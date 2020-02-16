@@ -14,7 +14,7 @@ import Col from 'react-bootstrap/Col';
 import _ from 'lodash';
 
 import { baseApiUrl } from './constants';
-import { getStored, store } from './helpers';
+import { getStored, store, resetStorage } from './helpers';
 import Loader from './Loader';
 
 const showsUrl = baseApiUrl + '/programmes';
@@ -48,8 +48,8 @@ export default function ShowPreferences() {
             result = _.concat(chosenShows, showUrl);
         }
 
-        setChosenShows(result);
         store('chosenShows', result);
+        setChosenShows(result);
     };
 
     const saveDaysPreference = newValue => {
@@ -60,16 +60,17 @@ export default function ShowPreferences() {
             return;
         }
 
-        setDaysToSee(parsedValue)
         store('daysToSee', parsedValue)
+        setDaysToSee(parsedValue)
         setDaysPreferenceValid(true);
     };
 
     const advancedMenu = <>
         <div className="d-flex justify-content-end mb-3">
             <Button variant="outline-danger" onClick={() => {
-                localStorage.clear();
+                resetStorage();
                 setChosenShows([]);
+                setDaysToSee(15);
             }}>
                 מחק את כל ההעדפות והיסטוריית ההשמעה
             </Button>

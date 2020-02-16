@@ -4,10 +4,14 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
+  Redirect,
 } from 'react-router-dom';
 
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.css';
+
+import QueryString from 'query-string';
+import JwtDecode from 'jwt-decode';
 
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
@@ -17,6 +21,9 @@ import MediaPlayer from './MediaPlayer';
 import ShowList from './ShowList';
 import ShowPreferences from './ShowPreferences';
 import PrivacyPolicy from './PrivacyPolicy';
+import Logout from './Logout';
+
+import { getStored, store } from './helpers';
 
 export default function App() {
   const [url, setUrl] = useState(null);
@@ -55,25 +62,41 @@ export default function App() {
                   <Route path="/privacy">
                     <PrivacyPolicy/>
                   </Route>
-                  <Route path="/">
-                    <ShowList playerCallback={(targetUrl, callbacks) => {
-                      setUrl(currentUrl => {
-                        if (targetUrl !== currentUrl) {
-                          return targetUrl;
-                        }
-
-                        setPauseToggle(currentState => !currentState);
-                        return currentUrl;
-                      });
-
-                      setOnProgressCallback(() => callbacks.onProgress);
-                      setOnDurationCallback(() => callbacks.onDuration);
-                      setOnPlayCallback(() => callbacks.onPlay);
-                      setOnPauseCallback(() => callbacks.onPause);
-                      setOnStopCallback(() => callbacks.onStop);
-                      setProgressCallback(() => callbacks.showProgess);
-                    }} />
+                  <Route path="/logout">
+                    <Logout/>
                   </Route>
+                  <Route path="/" render={routeProps => {
+                    const hashParams = QueryString.parse(routeProps.location.hash);
+                    if (hashParams.access_token !== undefined) {
+                      store('loggedIn', true);
+                      store('authAccessToken', hashParams.access_token);
+
+                      const tokenUsername = JwtDecode(hashParams.access_token).username;
+                      store('username', tokenUsername);
+
+                      return <Redirect to="/" />;
+                    }
+
+                    return (
+                      <ShowList playerCallback={(targetUrl, callbacks) => {
+                        setUrl(currentUrl => {
+                          if (targetUrl !== currentUrl) {
+                            return targetUrl;
+                          }
+
+                          setPauseToggle(currentState => !currentState);
+                          return currentUrl;
+                        });
+
+                        setOnProgressCallback(() => callbacks.onProgress);
+                        setOnDurationCallback(() => callbacks.onDuration);
+                        setOnPlayCallback(() => callbacks.onPlay);
+                        setOnPauseCallback(() => callbacks.onPause);
+                        setOnStopCallback(() => callbacks.onStop);
+                        setProgressCallback(() => callbacks.showProgess);
+                      }} />
+                    );
+                  }}/>
                 </Switch>
               </Col>
             </Row>
