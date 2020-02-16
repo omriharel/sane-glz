@@ -81,7 +81,7 @@ export const fetchOnlineData = (callback) => {
             locallyStore('onlineDataFetched', true);
 
             // there is existing data to maybe load
-            if (data.last_updated !== null) {
+            if (data.last_updated) {
 
                 const onlineDataTimestamp = getStored('onlineDataTimestamp') || null;
                 locallyStore('onlineDataTimestamp', data.last_updated);
