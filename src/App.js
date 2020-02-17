@@ -5,6 +5,7 @@ import {
   Switch,
   Route,
   Redirect,
+  Link
 } from 'react-router-dom';
 
 import './App.css';
@@ -23,7 +24,7 @@ import ShowPreferences from './ShowPreferences';
 import PrivacyPolicy from './PrivacyPolicy';
 import Logout from './Logout';
 
-import { getStored, store } from './helpers';
+import { store } from './helpers';
 
 export default function App() {
   const [url, setUrl] = useState(null);
@@ -102,6 +103,9 @@ export default function App() {
             </Row>
           </Container>
         </Router>
+        <div className="d-flex justify-content-center mb-2 mt-n2">
+          <a className="text-info" as={Link} to="/privacy" href="/privacy">פרטיות | Privacy</a>
+        </div>
       </div>
     </div>
   );

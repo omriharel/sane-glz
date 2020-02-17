@@ -24,7 +24,6 @@ export default function ShowList(props) {
     const [numOfShows, setNumOfShows] = useState(shows.length);
     const [fetchedShowsCounter, setFetchedShowsCounter] = useState(0);
     const [currentlyPlayingShow, setCurrentlyPlayingShow] = useState(null);
-    const [fetchedOnlineData, setFetchedOnlineData] = useState(false);
 
     // map of showKey -> showObject
     const [fetchedShows, setFetchedShows] = useState({});

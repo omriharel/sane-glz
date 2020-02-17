@@ -168,9 +168,17 @@ export default function MediaPlayer(props) {
                     </Container>
                 </>
              ) : (
-                 <h1 css={css`padding-top: 35px;`}>
-                     Sane GLZ
-                 </h1>
+                <Container>
+                    <div class="d-flex align-items-center justify-content-center text-left" height="100%">
+                        <h1 css={css`line-height: 0.9;`}>Sane<br />GLZ</h1>
+                        <img
+                            class="mr-3"
+                            src="./logo192.png"
+                            alt="SaneGLZ logo"
+                            height="100px"
+                        />
+                    </div>
+                </Container>
              )}
         </div>
     );
